@@ -14,10 +14,10 @@ jobs:
       - name: execute script # run the run.py to get the latest data
         run: |
           python load_data_to_db.py
-      - name: add to git and commit
+      - name: commit files
         run: |
-          git config --global user.email -m "jmaslek11@gmail.com"
-          git config --global user.name -m "James"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add -A
-          git commit
+          git commit -m "update data" -a
           git push
