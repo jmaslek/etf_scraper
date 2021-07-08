@@ -20,6 +20,7 @@ jobs:
       - name: execute script # run the run.py to get the latest data
         run: |
           python scrape_data.py
+          python scrape_holdings.py
       - name: commit files
         run: |
           git config --local user.email "action@github.com"
