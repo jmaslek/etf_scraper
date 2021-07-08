@@ -23,7 +23,9 @@ for link in all_links:
     etf_symbols.append(link.text.split("-")[0].strip(" "))
 
 df = pd.DataFrame(columns = etf_symbols)
-for etf in small_etfs:
+for counter,etf in enumerate(etf_symbols):
+    if counter%100 == 0:
+        print(f"{counter}/{len(etf_symbols)}")
     r1 = requests.get(f"https://stockanalysis.com/etf/{etf}")
     soup1 = bs(r1.text, "html.parser").find("div", {"class": "info"}).findAll("td")
     column = []
