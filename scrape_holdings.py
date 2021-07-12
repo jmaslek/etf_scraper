@@ -17,6 +17,7 @@ for etf in etf_symbols:
     try:
         if os.path.exists(file):
             df_historical = pd.read_csv(file, index_col=0)
+            print(etf)
         r1 = requests.get(f"https://stockanalysis.com/etf/{etf}/holdings")
         s1 = (
             bs(r1.text, "html.parser")
