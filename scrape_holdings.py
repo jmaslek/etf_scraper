@@ -26,7 +26,7 @@ for etf in etf_symbols:
             tick.append(entry.findAll("td")[2].text)
         else:
             tick.append(entry.findAll("td")[1].text)
-        percent.append(float(entry.findAll("td")[3].text.strip("%")))
+        percent.append(float(entry.findAll("td")[3].text.strip("%").strip(",))
         if idx >= 200:
             break
     df = pd.DataFrame(data=[percent])
