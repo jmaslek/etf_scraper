@@ -46,5 +46,5 @@ for etf in etf_symbols:
     ordered_cols = list(new_df.columns)
     ordered_cols.remove("SUM")
     ordered_cols += ["SUM"]
-    new_df = new_df[[ordered_cols]]
+    new_df = new_df[ordered_cols]
     new_df.to_csv(file)
