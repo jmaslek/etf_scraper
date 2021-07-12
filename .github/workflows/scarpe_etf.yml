@@ -1,0 +1,29 @@
+on:
+  schedule:
+    - cron: '0 9-17 * * 1-5'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner.
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9 #install the python needed
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas bs4 requests numpy
+      - name: execute scrape etf overviews # run the run.py to get the latest data
+        run: |
+          python scrape_data.py
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "update data" -a
+          git push
