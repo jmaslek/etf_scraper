@@ -36,6 +36,9 @@ for etf in etf_symbols:
         df.columns = tick
         df.index = [datetime.datetime.now().strftime("%m/%d/%Y")]
         df["SUM"] = df.sum(axis=1)
+        if df.columns.value_counts().max() > 1:
+            #Seems to occur for me with symbol 1117.hk having many desciptions?
+            continue
         if os.path.exists(file):
             new_df = pd.concat([df_historical, df], axis=0).fillna(0)
             # Make SUM the last column
