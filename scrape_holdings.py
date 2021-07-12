@@ -18,8 +18,8 @@ for etf in etf_symbols:
         r1 = requests.get(f"https://stockanalysis.com/etf/{etf}/holdings")
         s1 = (
             bs(r1.text, "html.parser")
-                .find("table", {"class": "fullholdings"})
-                .find("tbody")
+            .find("table", {"class": "fullholdings"})
+            .find("tbody")
         )
         tick, percent, shares = [], [], []
         for idx, entry in enumerate(s1.findAll("tr"), 1):
@@ -27,7 +27,9 @@ for etf in etf_symbols:
                 tick.append(entry.findAll("td")[2].text)
             else:
                 tick.append(entry.findAll("td")[1].text)
-            percent.append(float(entry.findAll("td")[3].text.strip("%").replace(",","_")))
+            percent.append(
+                float(entry.findAll("td")[3].text.strip("%").replace(",", "_"))
+            )
             if idx >= 200:
                 break
         df = pd.DataFrame(data=[percent])
