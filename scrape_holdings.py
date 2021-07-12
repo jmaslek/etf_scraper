@@ -50,7 +50,7 @@ for etf in etf_symbols:
         else:
             new_df = df.copy()
         new_df.to_csv(file)
-    except Exception as e:
-        print(e)
+        
         print(etf)
-print(new_df)
+    except Exception as e:
+        pass
