@@ -3,6 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup as bs
 import datetime
 import os
+import random 
 
 r = requests.get("https://stockanalysis.com/etf/")
 soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
@@ -11,6 +12,14 @@ etf_symbols = []
 
 for link in all_links:
     etf_symbols.append(link.text.split("-")[0].strip(" "))
+    
+# Not sure if some dont update due to times.  Add shuffle to randomly loop.
+random.shuffle(etf_symbols)
+# This ensures that at least spy and qqq runs first
+etf_symbols.remove("SPY")
+etf_symbols.remove("QQQ")
+etf_symbols.insert(0, "QQQ")
+etf_symbols.insert(0, "SPY")
 
 for etf in etf_symbols:
     try:
@@ -38,6 +47,8 @@ for etf in etf_symbols:
         df["SUM"] = df.sum(axis=1)
         if df.columns.value_counts().max() > 1:
             # Seems to occur for me with symbol 1117.hk having many desciptions as an example
+            print("Too many entries")
+            print(etf)
             continue
 
         try:
@@ -52,4 +63,6 @@ for etf in etf_symbols:
         new_df = new_df[ordered_cols]
         new_df.to_csv(file)
     except Exception as e:
+        print("error")
+        print(etf)
         pass
