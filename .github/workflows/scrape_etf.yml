@@ -1,6 +1,4 @@
-on:
-  schedule:
-    - cron: '0 13-21 * * 1-5'
+on: [push]
 
 jobs:
   build:
