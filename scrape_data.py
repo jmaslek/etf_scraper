@@ -24,7 +24,7 @@ for entry in data["pageProps"]["stocks"]:
             
 df = pd.DataFrame(columns=etf_symbols)
 for etf in etf_symbols:
-    r = requests.get(f"https://stockanalysis.com/etf/{etf_symbol}")
+    r = requests.get(f"https://stockanalysis.com/etf/{etf}")
     soup = bs(r.text, "html.parser")  # %%
     tables = soup.findAll("table")
     texts = []
