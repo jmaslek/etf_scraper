@@ -69,7 +69,7 @@ df["DivYield"] = df["DivYield"].apply(
     lambda x: float(x.strip("%")) if x != "n/a" else np.nan
 )
 
-df["Volume"] = df["Volume"].apply(lambda x: float(x.replace(",","") if x!= "n/a" else np.nan)
+df["Volume"] = df["Volume"].apply(lambda x: float(x.replace(",","")) if x!= "n/a" else np.nan)
 df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x.strip("$")))
 df["Open"] = df["Open"].apply(lambda x: float(x.strip("$")))
 df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x) if x != "n/a" else np.nan)
