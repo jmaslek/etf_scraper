@@ -24,36 +24,57 @@ for entry in data["pageProps"]["stocks"]:
             
 df = pd.DataFrame(columns=etf_symbols)
 for etf in etf_symbols:
-    r1 = requests.get(f"https://stockanalysis.com/etf/{etf}")
-    soup1 = bs(r1.text, "html.parser").find("div", {"class": "info"}).findAll("td")
-    column = []
-    value = []
-    column.append("Last Price")
-    value.append(
-        bs(r1.text, "html.parser")
-        .find("div", {"class": "quote"})
-        .find("td", {"id": "qLast"})
-        .text
-    )
-    for row in soup1[:-4:2]:
-        column.append(row.text)
-    for row in soup1[1:-4:2]:
-        value.append(row.text)
+    r = requests.get(f"https://stockanalysis.com/etf/{etf_symbol}")
+    soup = bs(r.text, "html.parser")  # %%
+    tables = soup.findAll("table")
+    texts = []
+    for tab in tables[:2]:
+        entries = tab.findAll("td")
+        for ent in entries:
+            texts.append(ent.get_text())
+
+    vars = [0, 2, 4, 6, 8, 10, 12, 18, 20, 22, 26, 28, 30, 32]
+    vals = [idx + 1 for idx in vars]
+    columns = [texts[idx] for idx in vars]
+    data = [texts[idx] for idx in vals]
+    
+    
     df[etf] = value
-df.index = column
+df.index = columns
 df = df.T
-df.columns = ["Price", "Assets", "NAV", "Expense", "PE", "Beta", "Div", "DivYield"]
-df["Price"] = df["Price"].apply(lambda x: float(x.strip("$")))
+df.columns = ['Assets',
+ 'NAV',
+ 'Expense',
+ 'PE',
+ 'SharesOut',
+ 'Div,
+ 'DivYield',
+ 'Volume',
+ 'Open',
+ 'PrevClose',
+ 'YrLow',
+ 'YrHigh',
+ 'Beta',
+ 'N_Hold']
+
+df["Assets"] = df["Assets"].apply(lambda x: assets_to_num(x))
 df["NAV"] = df["NAV"].apply(lambda x: float(x.strip("$")) if x != "n/a" else np.nan)
 df["Expense"] = df["Expense"].apply(
     lambda x: float(x.strip("%")) if x != "n/a" else np.nan
 )
+df["PE"] = df["PE"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["SharesOut"] = df["SharesOut"].apply(lambda x: assets_to_num(x))
 df["Div"] = df["Div"].apply(lambda x: float(x.strip("$")) if x != "n/a" else np.nan)
 df["DivYield"] = df["DivYield"].apply(
     lambda x: float(x.strip("%")) if x != "n/a" else np.nan
 )
-df["PE"] = df["PE"].apply(lambda x: float(x) if x != "n/a" else np.nan)
-df["Beta"] = df["Beta"].apply(lambda x: float(x) if x != "n/a" else np.nan)
-df["Assets"] = df["Assets"].apply(lambda x: assets_to_num(x))
 
+df["Volume"] = df["Volume"].apply(lambda x: float(x.replace(",","") if x!= "n/a" else np.nan)
+df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x.strip("$")))
+df["Open"] = df["Open"].apply(lambda x: float(x.strip("$")))
+df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["YrLow"] = df["YrLow"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["YrHigh"] = df["YrHigh"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["Beta"] = df["Beta"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["N_Hold"] = df["N_Hold"].apply(lambda x: float(x) if x != "n/a" else np.nan)
 df.to_csv("etf_overviews.csv")
