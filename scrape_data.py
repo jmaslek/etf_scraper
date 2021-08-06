@@ -17,13 +17,15 @@ def assets_to_num(x):
 
 
 r = requests.get("https://stockanalysis.com/etf/")
-soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
-all_links = soup[0].findAll("li")
+soup = bs(r.text, "html.parser").findAll("table", {"class": "SymbolTable_table__3Q2qq"})
+all_links = soup[0].findAll("tr")
 etf_symbols = []
 
 for link in all_links:
-    etf_symbols.append(link.text.split("-")[0].strip(" "))
-
+    data = link.findAll("td")
+    if data:
+         etf_symbols.append(data[0].find("a").get_text())
+            
 df = pd.DataFrame(columns=etf_symbols)
 for etf in etf_symbols:
     r1 = requests.get(f"https://stockanalysis.com/etf/{etf}")
