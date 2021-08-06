@@ -39,7 +39,7 @@ for etf in etf_symbols:
     data = [texts[idx] for idx in vals]
     
     
-    df[etf] = value
+    df[etf] = vals
 df.index = columns
 df = df.T
 df.columns = ['Assets',
