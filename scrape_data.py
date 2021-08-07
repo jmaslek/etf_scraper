@@ -60,7 +60,7 @@ df.columns = ['Assets',
  'Beta',
  'N_Hold']
 
-df["Assets"] = df["Assets"].apply(lambda x: assets_to_num(x))
+df["Assets"] = df["Assets"].apply(lambda x: assets_to_num(x) if isinstance(x,str) else np.nan)
 df["NAV"] = df["NAV"].apply(lambda x: float(x.strip("$")) if x not in ["n/a","-"] else np.nan)
 df["Expense"] = df["Expense"].apply(lambda x: float(x.strip("%")) if x not in ["n/a","-"] else np.nan)
 df["PE"] = df["PE"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
