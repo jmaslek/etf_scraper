@@ -1,8 +1,8 @@
-on:   
+on:  
+  push:
+  
   schedule:
-    - cron: '39 13-21 * * 1-5'
-    
-    
+    - cron: '39 13-21 * * 1-5' 
 
 jobs:
   build:
