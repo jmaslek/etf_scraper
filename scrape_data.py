@@ -37,10 +37,9 @@ for etf in etf_symbols:
         vars = [0, 2, 4, 6, 8, 10, 12, 18, 20, 22, 26, 28, 30, 32]
         vals = [idx + 1 for idx in vars]
         columns = [texts[idx] for idx in vars]
-        data = [texts[idx] for idx in vals]
-
-    
-        df[etf] = vals
+        data = [texts[idx] for idx in vals]    
+        df[etf] = data
+        
     except Exception as e:
         print(etf)
         
@@ -62,23 +61,19 @@ df.columns = ['Assets',
  'N_Hold']
 
 df["Assets"] = df["Assets"].apply(lambda x: assets_to_num(x))
-df["NAV"] = df["NAV"].apply(lambda x: float(x.strip("$")) if x != "n/a" else np.nan)
-df["Expense"] = df["Expense"].apply(
-    lambda x: float(x.strip("%")) if x != "n/a" else np.nan
-)
-df["PE"] = df["PE"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["NAV"] = df["NAV"].apply(lambda x: float(x.strip("$")) if x not in ["n/a","-"] else np.nan)
+df["Expense"] = df["Expense"].apply(lambda x: float(x.strip("%")) if x not in ["n/a","-"] else np.nan)
+df["PE"] = df["PE"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
 df["SharesOut"] = df["SharesOut"].apply(lambda x: assets_to_num(x))
-df["Div"] = df["Div"].apply(lambda x: float(x.strip("$")) if x != "n/a" else np.nan)
-df["DivYield"] = df["DivYield"].apply(
-    lambda x: float(x.strip("%")) if x != "n/a" else np.nan
-)
-df["Volume"] = df["Volume"].apply(lambda x: float(x.replace(",","")) if x!= "n/a" else np.nan)
+df["Div"] = df["Div"].apply(lambda x: float(x.strip("$")) if x not in ["n/a","-"] else np.nan)
+df["DivYield"] = df["DivYield"].apply(lambda x: float(x.strip("%")) if x not in ["n/a","-"] else np.nan)
+df["Volume"] = df["Volume"].apply(lambda x: float(x.replace(",","")) if x not in ["n/a","-"] else np.nan)
 df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x.strip("$")))
-df["Open"] = df["Open"].apply(lambda x: float(x.strip("$")))
-df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x) if x != "n/a" else np.nan)
-df["YrLow"] = df["YrLow"].apply(lambda x: float(x) if x != "n/a" else np.nan)
-df["YrHigh"] = df["YrHigh"].apply(lambda x: float(x) if x != "n/a" else np.nan)
-df["Beta"] = df["Beta"].apply(lambda x: float(x) if x != "n/a" else np.nan)
-df["N_Hold"] = df["N_Hold"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+df["Open"] = df["Open"].apply(lambda x: float(x.strip("$")) if x not in ["n/a","-"] else np.nan)
+df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
+df["YrLow"] = df["YrLow"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
+df["YrHigh"] = df["YrHigh"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
+df["Beta"] = df["Beta"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
+df["N_Hold"] = df["N_Hold"].apply(lambda x: float(x) if x not in ["n/a","-"] else np.nan)
 
 df.to_csv("etf_overviews.csv")
