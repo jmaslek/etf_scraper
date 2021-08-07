@@ -41,7 +41,7 @@ for etf in etf_symbols:
 
     
         df[etf] = vals
-       except Exception as e:
+    except Exception as e:
         print(etf)
         
 df.index = columns
