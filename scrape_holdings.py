@@ -21,25 +21,16 @@ etf_symbols.insert(0, "SPY")
 for etf in etf_symbols:
     try:
         file = f"data/{etf}.csv"
-        r1 = requests.get(f"https://stockanalysis.com/etf/{etf}/holdings")
-        s1 = (
-            bs(r1.text, "html.parser")
-            .find("table", {"class": "fullholdings"})
-            .find("tbody")
-        )
-        tick, percent, shares = [], [], []
-        for idx, entry in enumerate(s1.findAll("tr"), 1):
-            if entry.findAll("td")[1].text == "n/a":
-                tick.append(entry.findAll("td")[2].text)
-            else:
-                tick.append(entry.findAll("td")[1].text)
-            percent.append(
-                float(entry.findAll("td")[3].text.strip("%").replace(",", "_"))
-            )
-            if idx >= 200:
-                break
-        df = pd.DataFrame(data=[percent])
-        df.columns = tick
+        data = requests.get(f"https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/etf/{symbol}/holdings.json").json()
+        tickers = []
+        percent = []
+        shares = []
+        for entry in data["pageProps"]["data"]["list"]:
+            tickers.append(entry["symbol"].strip("$"))
+            percent.append(float(entry["assets"].strip("%")))
+
+        df = pd.DataFrame(data=[percent]).T
+        df.columns = tickers
         df.index = [datetime.datetime.now().strftime("%m/%d/%Y")]
         df["SUM"] = df.sum(axis=1)
         if df.columns.value_counts().max() > 1:
