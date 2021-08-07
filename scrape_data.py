@@ -22,7 +22,7 @@ data=requests.get("https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/et
 for entry in data["pageProps"]["stocks"]:
     etf_symbols.append(entry["s"])
             
-df = pd.DataFrame(columns=etf_symbols)
+df = pd.DataFrame()
 for etf in etf_symbols:
     try:
         r = requests.get(f"https://stockanalysis.com/etf/{etf}")
