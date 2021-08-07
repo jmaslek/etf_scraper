@@ -16,12 +16,15 @@ def assets_to_num(x):
         return np.nan
 
 
+r = requests.get("https://api.stockanalysis.com/etf/")
+soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
+all_links = soup[0].findAll("li")
 etf_symbols = []
 etf_names = []
-data=requests.get("https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/etf.json").json()
-for entry in data["pageProps"]["stocks"]:
-    etf_symbols.append(entry["s"])
-            
+for link in all_links:
+    etf_symbols.append(link.text.split("-")[0].strip(" "))
+    etf_names.append(link.text.split("-")[1][1:])
+    
 df = pd.DataFrame()
 for etf in etf_symbols:
     try:
