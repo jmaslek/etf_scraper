@@ -5,12 +5,14 @@ import datetime
 import os
 import random
 
+r = requests.get("https://api.stockanalysis.com/etf/")
+soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
+all_links = soup[0].findAll("li")
 etf_symbols = []
-data = requests.get(
-    "https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/etf.json"
-).json()
-for entry in data["pageProps"]["stocks"]:
-    etf_symbols.append(entry["s"])
+etf_names = []
+for link in all_links:
+    etf_symbols.append(link.text.split("-")[0].strip(" "))
+    etf_names.append(link.text.split("-")[1][1:])
 
 # Not sure if some dont update due to times.  Add shuffle to randomly loop.
 random.shuffle(etf_symbols)
