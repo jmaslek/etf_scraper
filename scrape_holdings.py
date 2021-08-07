@@ -3,13 +3,15 @@ import pandas as pd
 from bs4 import BeautifulSoup as bs
 import datetime
 import os
-import random 
+import random
 
 etf_symbols = []
-data=requests.get("https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/etf.json").json()
+data = requests.get(
+    "https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/etf.json"
+).json()
 for entry in data["pageProps"]["stocks"]:
     etf_symbols.append(entry["s"])
-    
+
 # Not sure if some dont update due to times.  Add shuffle to randomly loop.
 random.shuffle(etf_symbols)
 # This ensures that at least spy and qqq runs first
@@ -21,15 +23,18 @@ etf_symbols.insert(0, "SPY")
 for etf in etf_symbols:
     try:
         file = f"data/{etf}.csv"
-        data = requests.get(f"https://stockanalysis.com/_next/data/VDLj2l5sT7aRmdOwKVFT4/etf/{symbol}/holdings.json").json()
+        link = f"https://api.stockanalysis.com/etf/{etf}/holdings/"
+        r = requests.get(link)
+        soup = bs(r.text, "html.parser")
+        soup = soup.find("table")
+        tds = soup.findAll("td")
         tickers = []
-        percent = []
-        shares = []
-        for entry in data["pageProps"]["data"]["list"]:
-            tickers.append(entry["symbol"].strip("$"))
-            percent.append(float(entry["assets"].strip("%")))
-
-        df = pd.DataFrame(data=[percent]).T
+        for i in tds[1::5]:
+            tickers.append(i.text)
+        percents = []
+        for i in tds[3::5]:
+            percents.append(float(i.text.strip("%")))
+        df = pd.DataFrame(data=[percents])
         df.columns = tickers
         df.index = [datetime.datetime.now().strftime("%m/%d/%Y")]
         df["SUM"] = df.sum(axis=1)
