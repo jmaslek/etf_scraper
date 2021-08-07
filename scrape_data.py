@@ -24,22 +24,26 @@ for entry in data["pageProps"]["stocks"]:
             
 df = pd.DataFrame(columns=etf_symbols)
 for etf in etf_symbols:
-    r = requests.get(f"https://stockanalysis.com/etf/{etf}")
-    soup = bs(r.text, "html.parser")  # %%
-    tables = soup.findAll("table")
-    texts = []
-    for tab in tables[:2]:
-        entries = tab.findAll("td")
-        for ent in entries:
-            texts.append(ent.get_text())
+    try:
+        r = requests.get(f"https://stockanalysis.com/etf/{etf}")
+        soup = bs(r.text, "html.parser")  # %%
+        tables = soup.findAll("table")
+        texts = []
+        for tab in tables[:2]:
+            entries = tab.findAll("td")
+            for ent in entries:
+                texts.append(ent.get_text())
 
-    vars = [0, 2, 4, 6, 8, 10, 12, 18, 20, 22, 26, 28, 30, 32]
-    vals = [idx + 1 for idx in vars]
-    columns = [texts[idx] for idx in vars]
-    data = [texts[idx] for idx in vals]
+        vars = [0, 2, 4, 6, 8, 10, 12, 18, 20, 22, 26, 28, 30, 32]
+        vals = [idx + 1 for idx in vars]
+        columns = [texts[idx] for idx in vars]
+        data = [texts[idx] for idx in vals]
+
     
-    
-    df[etf] = vals
+        df[etf] = vals
+       except Exception as e:
+        print(etf)
+        
 df.index = columns
 df = df.T
 df.columns = ['Assets',
@@ -68,7 +72,6 @@ df["Div"] = df["Div"].apply(lambda x: float(x.strip("$")) if x != "n/a" else np.
 df["DivYield"] = df["DivYield"].apply(
     lambda x: float(x.strip("%")) if x != "n/a" else np.nan
 )
-
 df["Volume"] = df["Volume"].apply(lambda x: float(x.replace(",","")) if x!= "n/a" else np.nan)
 df["PrevClose"] = df["PrevClose"].apply(lambda x: float(x.strip("$")))
 df["Open"] = df["Open"].apply(lambda x: float(x.strip("$")))
@@ -77,4 +80,5 @@ df["YrLow"] = df["YrLow"].apply(lambda x: float(x) if x != "n/a" else np.nan)
 df["YrHigh"] = df["YrHigh"].apply(lambda x: float(x) if x != "n/a" else np.nan)
 df["Beta"] = df["Beta"].apply(lambda x: float(x) if x != "n/a" else np.nan)
 df["N_Hold"] = df["N_Hold"].apply(lambda x: float(x) if x != "n/a" else np.nan)
+
 df.to_csv("etf_overviews.csv")
