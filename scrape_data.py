@@ -16,7 +16,7 @@ def assets_to_num(x):
         return np.nan
 
 
-r = requests.get("https://api.stockanalysis.com/etf/")
+r = requests.get("https://api.stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
 soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
 all_links = soup[0].findAll("li")
 etf_symbols = []
@@ -28,7 +28,7 @@ for link in all_links:
 df = pd.DataFrame()
 for etf in etf_symbols:
     try:
-        r = requests.get(f"https://stockanalysis.com/etf/{etf}")
+        r = requests.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
         soup = bs(r.text, "html.parser")  # %%
         tables = soup.findAll("table")
         texts = []
