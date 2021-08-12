@@ -5,7 +5,7 @@ import datetime
 import os
 import random
 
-r = requests.get("https://api.stockanalysis.com/etf/")
+r = requests.get("https://api.stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
 soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
 all_links = soup[0].findAll("li")
 etf_symbols = []
@@ -26,7 +26,7 @@ for etf in etf_symbols:
     try:
         file = f"data/{etf}.csv"
         link = f"https://api.stockanalysis.com/etf/{etf}/holdings/"
-        r = requests.get(link)
+        r = requests.get(link, headers={"User-Agent":"Mozilla/5.0"})
         soup = bs(r.text, "html.parser")
         soup = soup.find("table")
         tds = soup.findAll("td")
