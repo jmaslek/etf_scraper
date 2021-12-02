@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import json
 from bs4 import BeautifulSoup as bs
 import numpy as np
 
@@ -15,15 +16,10 @@ def assets_to_num(x):
     else:
         return np.nan
 
-
-r = requests.get("https://api.stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
-soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
-all_links = soup[0].findAll("li")
-etf_symbols = []
-etf_names = []
-for link in all_links:
-    etf_symbols.append(link.text.split("-")[0].strip(" "))
-    etf_names.append(link.text.split("-")[1][1:])
+r = requests.get("https://stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
+soup2 = BeautifulSoup(r.text,"html.parser")
+script = soup2.find("script",{"id":"__NEXT_DATA__"})
+etf_symbols = pd.DataFrame(json.loads(script.text)["props"]["pageProps"]["stocks"]).s.to_list()
     
 df = pd.DataFrame()
 for etf in etf_symbols:
