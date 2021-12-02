@@ -1,19 +1,16 @@
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup
 import datetime
 import os
 import random
 
-r = requests.get("https://api.stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
-soup = bs(r.text, "html.parser").findAll("ul", {"class": "no-spacing"})
-all_links = soup[0].findAll("li")
-etf_symbols = []
-etf_names = []
-for link in all_links:
-    etf_symbols.append(link.text.split("-")[0].strip(" "))
-    etf_names.append(link.text.split("-")[1][1:])
-
+r = requests.get("https://stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
+soup2 = BeautifulSoup(r.text,"html.parser")
+script = soup2.find("script",{"id":"__NEXT_DATA__"})
+etf_symbols = pd.DataFrame(json.loads(script.text)["props"]["pageProps"]["stocks"]).s.to_list()
+    
 # Not sure if some dont update due to times.  Add shuffle to randomly loop.
 random.shuffle(etf_symbols)
 # This ensures that at least spy and qqq runs first
