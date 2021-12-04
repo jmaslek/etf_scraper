@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import datetime
 import os
 import random
+import json
 
 r = requests.get("https://stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
 soup2 = BeautifulSoup(r.text,"html.parser")
