@@ -55,6 +55,8 @@ for etf in etf_symbols:
         ordered_cols += ["SUM"]
         new_df = new_df[ordered_cols]
         new_df.to_csv(file)
+        if etf == "SPY":
+            print("SPY Saved")
     except Exception as e:
         print("error")
         print(etf)
