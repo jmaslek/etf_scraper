@@ -23,7 +23,7 @@ etf_symbols.insert(0, "SPY")
 for etf in etf_symbols:
     try:
         file = f"data/{etf}.csv"
-        link = f"https://api.stockanalysis.com/etf/{etf}/holdings/"
+        link = f"https://stockanalysis.com/etf/{etf}/holdings/"
         r = requests.get(link, headers={"User-Agent":"Mozilla/5.0"})
         soup = bs(r.text, "html.parser")
         soup = soup.find("table")
