@@ -20,7 +20,8 @@ def assets_to_num(x):
 r = requests.get("https://stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
 soup2 = BeautifulSoup(r.text,"html.parser")
 script = soup2.find("script",{"id":"__NEXT_DATA__"})
-etf_symbols = pd.read_html(r.text)[0].Symbol.to_list()
+a1 = json.loads(soup2.find_all("script")[5].string)
+etf_symbols = pd.DataFrame(a1["data"]).s.to_list()
     
 df = pd.DataFrame()
 for etf in etf_symbols:
