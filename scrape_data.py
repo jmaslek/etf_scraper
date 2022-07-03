@@ -42,7 +42,7 @@ for etf in etf_symbols:
         df[etf] = data
         
     except Exception as e:
-        print(etf)
+        print(f"{etf}, status code: {r.status_code}")
         
 df.index = columns
 df = df.T
