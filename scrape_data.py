@@ -4,7 +4,7 @@ import json
 from bs4 import BeautifulSoup as bs
 from bs4 import BeautifulSoup
 import numpy as np
-
+import time
 
 def assets_to_num(x):
     x = x.strip("$")
@@ -40,7 +40,7 @@ for etf in etf_symbols:
         columns = [texts[idx] for idx in vars]
         data = [texts[idx] for idx in vals]    
         df[etf] = data
-        
+        time.sleep(.6)
     except Exception as e:
         print(f"{etf}, status code: {r.status_code}")
         
