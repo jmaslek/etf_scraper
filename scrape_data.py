@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup as bs
 from bs4 import BeautifulSoup
 import numpy as np
 import time
+from requests.adapters import HTTPAdapter, Retry
+
 
 def assets_to_num(x):
     x = x.strip("$")
@@ -16,7 +18,16 @@ def assets_to_num(x):
         return float(x.strip("K")) / 1000
     else:
         return np.nan
+    
+s = requests.Session()
 
+retries = Retry(total=10,
+                backoff_factor=1,
+                status_forcelist=[ 429 ])
+
+s.mount('https://', HTTPAdapter(max_retries=retries))
+    
+    
 r = requests.get("https://stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
 soup2 = BeautifulSoup(r.text,"html.parser")
 script = soup2.find("script",{"id":"__NEXT_DATA__"})
@@ -26,7 +37,8 @@ etf_symbols = pd.DataFrame(a1["data"]).s.to_list()
 df = pd.DataFrame()
 for etf in etf_symbols:
     try:
-        r = requests.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
+        #r = requests.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
+        r = s.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
         soup = bs(r.text, "html.parser")  # %%
         tables = soup.findAll("table")
         texts = []
