@@ -35,7 +35,8 @@ a1 = json.loads(soup2.find_all("script")[4].string)
 etf_symbols = pd.DataFrame(a1["data"]).s.to_list()
     
 df = pd.DataFrame()
-for etf in etf_symbols:
+df = pd.read_csv("etf_overviews.csv", index_col=0)
+for etf in etf_symbols[:50]:
     try:
         #r = requests.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
         r = s.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
