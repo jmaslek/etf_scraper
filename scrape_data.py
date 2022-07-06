@@ -22,7 +22,7 @@ def assets_to_num(x):
 s = requests.Session()
 
 retries = Retry(total=10,
-                backoff_factor=1,
+                backoff_factor=.5,
                 status_forcelist=[ 429 ])
 
 s.mount('https://', HTTPAdapter(max_retries=retries))
