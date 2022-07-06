@@ -21,7 +21,7 @@ def assets_to_num(x):
     
 s = requests.Session()
 
-retries = Retry(total=10,
+retries = Retry(total=5,
                 backoff_factor=.5,
                 status_forcelist=[ 429 ])
 
@@ -35,7 +35,7 @@ a1 = json.loads(soup2.find_all("script")[4].string)
 etf_symbols = pd.DataFrame(a1["data"]).s.to_list()
     
 df = pd.read_csv("etf_overviews.csv", index_col=0).T
-for etf in etf_symbols[:750]:
+for etf in etf_symbols[:500]:
     try:
         #r = requests.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
         r = s.get(f"https://stockanalysis.com/etf/{etf}", headers={"User-Agent":"Mozilla/5.0"})
