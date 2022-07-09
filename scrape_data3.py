@@ -10,6 +10,8 @@ from requests.adapters import HTTPAdapter, Retry
 
 def assets_to_num(x):
     x = x.strip("$")
+    if x[-1] not in ["M","B","K"]:
+        return x
     if x.endswith("M"):
         return float(x.strip("M"))
     elif x.endswith("B"):
