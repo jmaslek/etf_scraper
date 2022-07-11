@@ -22,6 +22,7 @@ jobs:
           python scrape_data4.py
       - name: commit files
         run: |
+          git fetch --unshallow origin
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
