@@ -19,9 +19,10 @@ jobs:
           pip install pandas bs4 requests numpy lxml
       - name: execute scrape etf overviews # run the run.py to get the latest data
         run: |
-          python scrape_data4.py
+          python scrape_data5.py
       - name: commit files
         run: |
+          git fetch --unshallow origin
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
