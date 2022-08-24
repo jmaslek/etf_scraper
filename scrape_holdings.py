@@ -10,7 +10,7 @@ import json
 r = requests.get("https://stockanalysis.com/etf/", headers={"User-Agent":"Mozilla/5.0"})
 soup2 = BeautifulSoup(r.text,"html.parser")
 script = soup2.find("script",{"id":"__NEXT_DATA__"})
-a1 = json.loads(soup2.find_all("script")[4].string)
+a1 = json.loads(soup2.find_all("script")[4].string)[1]
 etf_symbols = pd.DataFrame(a1["data"]).s.to_list()
     
 # Not sure if some dont update due to times.  Add shuffle to randomly loop.
